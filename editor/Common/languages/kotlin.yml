@@ -1,0 +1,42 @@
+categories:
+  keywords:
+    matches: 
+      - as
+      - break
+      - class
+      - continue
+      - do
+      - else
+      - 'false'
+      - for
+      - fun
+      - if
+      - import
+      - in
+      - interface
+      - is
+      - 'null'
+      - object
+      - package
+      - return
+      - super
+      - this
+      - throw
+      - 'true'
+      - try
+      - type
+      - alias
+      - typeof
+      - val
+      - var
+      - when
+      - while
+  variables:
+    matches: 
+      - 'True'
+      - 'False'
+      - None
+  conditionals:
+    matches: []
+  functions:
+    matches: []

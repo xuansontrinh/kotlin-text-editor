@@ -1,0 +1,19 @@
+categories:
+  keywords:
+    color: '#ff79c6'
+  variables:
+    color: '#F8F8F2'
+  conditionals:
+    color: '#50FA7B'
+  functions:
+    color: '#50FA7B'
+numbers:
+  color: '#8BE9FD'
+strings:
+  color: '#F1FA8C'
+comments:
+  color: '#6272a4'
+background:
+  color: '#282a36'
+foreground:
+  color: '#f8f8f2'
