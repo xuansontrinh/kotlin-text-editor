@@ -39,5 +39,4 @@ class GifCanvas(tk.Canvas):
             self.loc += 1
             self.loc %= len(self.frames)
             self.create_image(canvas_width/2, canvas_height/2, image=self.frames[self.loc])
-            # self.config(image=self.frames[self.loc])
             self.after(self.delay, self.next_frame)
