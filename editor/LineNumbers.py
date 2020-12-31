@@ -9,13 +9,13 @@ class LineNumbers(tk.Text):
 
         self.insert(1.0, '1')
         self.tag_add("right", 1.0, "end")
-        self.configure(state='disabled', width=2)
+        self.configure(state='disabled', width=3)
 
     def onKeyPress(self, event=None):
         final_index = str(self.text_widget.index(tk.END))
         num_of_lines = final_index.split('.')[0]
         line_numbers_string = "\n".join(str(no + 1) for no in range(int(num_of_lines)))
-        width = len(str(num_of_lines)) + 1
+        width = len(str(num_of_lines)) + 2
         self.configure(state='normal', width=width)
         self.delete(1.0, tk.END)
 

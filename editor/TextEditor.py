@@ -96,9 +96,9 @@ class TextEditor:
             self.window, 
             text='Clear Output',
             command=self.clearOutputPane)
-        self.execute_button.grid(column=18, row=1, sticky=tk.NSEW)
-        self.loading_label.grid(column=19, row=1, sticky=NSEW)
-        self.clear_output_button.grid(column=20, row=1, sticky=tk.NSEW)
+        self.execute_button.grid(column=18, columnspan=2, row=1, sticky=tk.NSEW)
+        self.loading_label.grid(column=20, row=1, sticky=NSEW)
+        self.clear_output_button.grid(column=21, columnspan=2, row=1, sticky=tk.NSEW)
         self.execute_button.image = play_image
 
         self.font_size.set(FONT_SIZE_MAP[FONT_SIZE_DEFAULT])
