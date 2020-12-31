@@ -39,4 +39,11 @@ categories:
   conditionals:
     matches: []
   functions:
-    matches: []
+    matches: 
+      - println
+error_terms:
+  match: '[A-Za-z_-]+.kts:(\d)+:(\d)+'
+execution_command:
+  - 'kotlinc'
+  - '-script'
+script_extension: 'kts'
