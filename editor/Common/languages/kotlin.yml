@@ -39,7 +39,8 @@ categories:
   conditionals:
     matches: []
   functions:
-    matches: 
+    matches:
+      - delay
       - println
 error_terms:
   match: '[A-Za-z_-]+.kts:(\d)+:(\d)+'
