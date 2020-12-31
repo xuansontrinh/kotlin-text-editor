@@ -2,7 +2,8 @@ import tkinter as tk
 from PIL import Image, ImageTk
 from itertools import count
 
-class ImageLabel(tk.Label):
+
+class GifCanvas(tk.Canvas):
     """a label that displays images, and plays them if they are gifs"""
     def load(self, im):
         if isinstance(im, str):
@@ -28,12 +29,14 @@ class ImageLabel(tk.Label):
             self.next_frame()
 
     def unload(self):
-        self.config(image="")
+        self.delete("all")
         self.frames = None
 
     def next_frame(self):
+        self.update()
+        canvas_width, canvas_height = self.winfo_width(), self.winfo_height()
         if self.frames:
             self.loc += 1
             self.loc %= len(self.frames)
-            self.config(image=self.frames[self.loc])
+            self.create_image(canvas_width/2, canvas_height/2, image=self.frames[self.loc])
             self.after(self.delay, self.next_frame)
