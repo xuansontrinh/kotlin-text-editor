@@ -34,10 +34,9 @@ def parse_language_file(language='kotlin'):
 def parse_theme_file(theme='dracula'):
     return parse_file(path=os.path.join(THEMES_PATH, '{}.yml'.format(theme)))
 
-def get_icon(name):
-    image = tk.PhotoImage(file=os.path.join(ICONS_PATH, '{}.png'.format(name)))
-    # image = image.subsample(2) 
-    
-    # image = Image.open(os.path.join(ICONS_PATH, '{}.png'.format(name)))
-    # image = image.resize((5, 5), Image.ANTIALIAS)
-    return image
+def get_icon(name, ext='png', path_only=False):
+    if not path_only:
+        image = tk.PhotoImage(file=os.path.join(ICONS_PATH, f'{name}.{ext}'))
+        return image
+    else:
+        return os.path.join(os.path.dirname(os.path.realpath(__file__)), ICONS_PATH, f'{name}.{ext}')

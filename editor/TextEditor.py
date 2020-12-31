@@ -11,8 +11,8 @@ from tkinter import font
 from Common.Utils import parse_theme_file, parse_language_file, get_icon, FONT_FAMILY, FONT_SIZE_MAP, FONT_SIZE_DEFAULT, FILE_NAME
 from CustomTkText import CustomTkText
 from Highlighter import Highlighter
-from ImageLabel import ImageLabel
-from LineNumbers import TextLineNumbers, LineNumbers
+from GifCanvas import GifCanvas
+from LineNumbers import TextLineNumbers
 
 
 class TextEditor:
@@ -38,21 +38,13 @@ class TextEditor:
         self.editor_lab = tk.Label(self.window, textvar=self.current_editor_index)
         self.editor.bind('<<CursorChange>>', self.updateEditorIndex)
         
-        self.line_numbers = LineNumbers(
-            self.window,
-            self.editor
-        )
-        
-        self.editor_scroll_bar = tk.Scrollbar(orient=tk.VERTICAL)
+        self.editor_scroll_bar = tk.Scrollbar(orient=tk.VERTICAL, command=self.editor.yview)
         self.editor.configure(yscrollcommand=self.editor_scroll_bar.set)
-        self.line_numbers.configure(yscrollcommand=self.editor_scroll_bar.set)
-        self.editor_scroll_bar.configure(command=self._multipleYview)
-        # self.line_numbers = TextLineNumbers(
-        #     self.window,
-        #     width=3
-        # )
-        # self.line_numbers.attach(self.editor)
-        # self.editor.bind("<<ViewScroll>>", self.onEditorViewScroll)
+        self.line_numbers = TextLineNumbers(
+            self.window
+        )
+        self.line_numbers.attach(self.editor)
+        self.editor.bind("<<ViewScroll>>", self.onEditorViewScroll)
         h = Highlighter(self.editor, language=self.language, theme=self.theme)
 
         self.buildMenuBar()
@@ -66,38 +58,48 @@ class TextEditor:
         self.output.tag_configure("error", foreground="red")
         self.output.tag_configure("error_location", foreground="blue", underline=True)
         self.output.tag_bind("error_location", "<Button-1>", self.onErrorLocationClicked)
-
-        self.loading_label = ImageLabel(self.window)
+        self.loading_spinner = get_icon('spinner', ext='gif')
+        self.loading_canvas = GifCanvas(
+            self.window,
+            width=self.loading_spinner.width(),
+            height=self.loading_spinner.height())
 
         # Layout Arrangement
-        for i in range(30):
+        for i in range(2, 30):
             self.window.columnconfigure(i, weight=1, uniform='son', minsize=0)
 
         self.window.rowconfigure(0, weight=1)
 
-        self.line_numbers.grid(column=0, columnspan=1, row=0, sticky=tk.NSEW)
-        self.editor.grid(column=1, columnspan=16, row=0, sticky=tk.NSEW)
+        self.line_numbers.grid(column=0, columnspan=2, row=0, sticky=tk.NSEW)
+        self.editor.grid(column=2, columnspan=15, row=0, sticky=tk.NSEW)
         self.editor_scroll_bar.grid(column=17, row=0, sticky=tk.NS)
         self.output.grid(column=18, columnspan=11, row=0, sticky=tk.NSEW)
         self.output_scroll_bar.grid(column=29, row=0, sticky=tk.NS)
 
         self.updateOutputPane()
-        self.editor_lab.grid(column=1, columnspan=16, row=1, sticky=tk.NSEW)
+        self.editor_lab.grid(column=2, columnspan=15, row=1, sticky=tk.NSEW)
 
         play_image = get_icon('play')
         self.execute_button = tk.Button(
-            self.window, 
+            self.window,
+            background=self.theme_file['background']['color'],
+            foreground=self.theme_file['foreground']['color'],
             text=' Execute', 
             image=play_image, 
             compound=tk.LEFT, 
-            width=5,
+            pady=5,
+            padx=10,
             command=self.onExecutePressed)
         self.clear_output_button = tk.Button(
-            self.window, 
+            self.window,
+            background=self.theme_file['background']['color'],
+            foreground=self.theme_file['foreground']['color'],
             text='Clear Output',
+            pady=5,
+            padx=10,
             command=self.clearOutputPane)
         self.execute_button.grid(column=18, columnspan=2, row=1, sticky=tk.NSEW)
-        self.loading_label.grid(column=20, row=1, sticky=NSEW)
+        self.loading_canvas.grid(column=20, row=1, sticky=tk.NSEW)
         self.clear_output_button.grid(column=21, columnspan=2, row=1, sticky=tk.NSEW)
         self.execute_button.image = play_image
 
@@ -107,13 +109,8 @@ class TextEditor:
         self.editor.focus_force()
         self.updateEditorIndex()
 
-    def _multipleYview(self, *args):
-            print('ahihi')
-            self.editor.yview(*args)
-            self.line_numbers.yview(*args)
-
-    # def onEditorViewScroll(self, event=None):
-    #     self.line_numbers.redraw(font=(FONT_FAMILY, self.font_size.get()))
+    def onEditorViewScroll(self, event=None):
+        self.line_numbers.redraw(font=(FONT_FAMILY, self.font_size.get()))
 
     def updateEditorIndex(self, event=None):
         cursor_position = self.editor.index(tk.INSERT)
@@ -152,15 +149,9 @@ class TextEditor:
         file.write(self.editor.get('1.0', tk.END + '-1c'))
         file.close()
 
-        self.loading_label.load(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'Common', 'resources', 'spinner.gif'))
+        self.loading_canvas.load(get_icon('spinner', ext='gif', path_only=True))
         self.execute_button.config(state=tk.DISABLED)
 
-        # process = subprocess.Popen(
-        #     self.language_file['execution_command'] + [self.script_file_name],
-        #     stdout=subprocess.PIPE, 
-        #     stderr=subprocess.PIPE,
-        #     shell=True)
-        # stdout, stderr = process.communicate()
         self.popenAndCall(
             self.onFinishExecute, 
             self.language_file['execution_command'] + [self.script_file_name],
@@ -178,7 +169,7 @@ class TextEditor:
         if len(stderr_str) != 0:
             self.updateOutputPane(stderr_str, stderr=True)
         
-        self.loading_label.unload()
+        self.loading_canvas.unload()
         self.execute_button.config(state=tk.NORMAL)
 
     def popenAndCall(self, on_exit, *popen_args, **popen_kwargs):
@@ -202,8 +193,8 @@ class TextEditor:
 
     def changeFontSize(self):
         self.editor.config(font=(FONT_FAMILY, self.font_size.get()))
-        self.line_numbers.config(font=(FONT_FAMILY, self.font_size.get()))
-        # self.line_numbers.redraw(font=(FONT_FAMILY, self.font_size.get()))
+        # self.line_numbers.config(font=(FONT_FAMILY, self.font_size.get()))
+        self.line_numbers.redraw(font=(FONT_FAMILY, self.font_size.get()))
         self.output.config(font=(FONT_FAMILY, self.font_size.get()))
 
     def buildMenuBar(self):
