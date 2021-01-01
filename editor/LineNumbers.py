@@ -1,5 +1,6 @@
 import tkinter as tk
 
+# Implement line number for text editor using tk Text
 class LineNumbers(tk.Text):
     def __init__(self, master, text_widget, **kwargs):
         super().__init__(master, **kwargs)
@@ -23,6 +24,7 @@ class LineNumbers(tk.Text):
         self.tag_add("right", 1.0, "end")
         self.configure(state='disabled')
 
+# Implement line number for text editor using tk Canvas
 class TextLineNumbers(tk.Canvas):
     def __init__(self, *args, **kwargs):
         tk.Canvas.__init__(self, *args, **kwargs)

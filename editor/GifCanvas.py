@@ -2,7 +2,7 @@ import tkinter as tk
 from PIL import Image, ImageTk
 from itertools import count
 
-
+# Class supports playing gifs in the canvas
 class GifCanvas(tk.Canvas):
     """a label that displays images, and plays them if they are gifs"""
     def load(self, im):

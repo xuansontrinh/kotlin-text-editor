@@ -2,7 +2,7 @@ import tkinter as tk
 
 from Common.Utils import parse_language_file, parse_theme_file
 
-
+# Syntax Highlighting class
 class Highlighter:
     def __init__(self, text_widget, language='kotlin', theme='dracula'):
         self.language_file = parse_language_file(language=language)

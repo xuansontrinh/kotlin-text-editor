@@ -1,5 +1,7 @@
 import tkinter as tk
 
+# Extend the tk Text to support some additional custom events 
+# and simple text manipulation shortcuts (select all, cut, copy, paste)
 class CustomTkText(tk.Text):
     def __init__(self, *args, **kwargs):
         tk.Text.__init__(self, *args, **kwargs)
