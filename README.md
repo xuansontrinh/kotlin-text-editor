@@ -25,7 +25,7 @@ This should be the screen that you see when running the script successfully:
 - [x] Supports kotlin script execution
 - [x] Shows a spinner to indicate that the script is being executed
 - [x] Highlights the error with red text and supports navigating to the error position by double-clicking on the location descriptions of the errors.
-- [x] Highlights source code syntax using simple regular expressions (hard keywords, comments, strings, numbers)
+- [x] Highlights source code syntax using simple regular expressions (hard keywords, comments, strings, numbers, data types)
 - [x] Supports adding other languages and editor themes by adding corresponding files to `editor/Common/languages/` and `editor/Common/themes/`
 
 ### Secondary (supporting) features

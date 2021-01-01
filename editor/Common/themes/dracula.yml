@@ -7,6 +7,8 @@ categories:
     color: '#50FA7B'
   functions:
     color: '#50FA7B'
+  data_types:
+    color: '#8BE9FD'
 numbers:
   color: '#8BE9FD'
 strings:

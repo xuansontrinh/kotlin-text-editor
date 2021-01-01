@@ -42,6 +42,18 @@ categories:
     matches:
       - delay
       - println
+  data_types:
+    matches:
+      - Boolean
+      - Char
+      - Byte
+      - Short
+      - Int
+      - Long
+      - Float
+      - Double
+      - Array
+      - String
 numbers:
   matches: 
     - (\d)+[.]?(\d)*
