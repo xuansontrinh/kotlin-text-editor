@@ -44,20 +44,24 @@ class Highlighter:
             matches = self.language_file['categories'][category]['matches']
             for keyword in matches:
                 start = 1.0
-                keyword = "(^|\W)" + keyword + "[^A-Za-z0-9_-]"
+                keyword = f"\m{keyword}(?!\w)"
                 idx = self.text_widget.search(keyword, start,\
                     stopindex=tk.END, count=length, regexp=1)
                 while idx:
-                    end = f"{idx}+{length.get() - 1}c"
+                    
+                    end = f"{idx}+{length.get()}c"
+                    # if self.text_widget.get(end, end + '+1c').isalnum():
+                    #     print(self.text_widget.get(end, end + '+1c'), end)
+                    #     end = end + '+1c'
                     self.text_widget.tag_add(category, idx, end)
                     start = end
                     idx = self.text_widget.search(keyword, start, stopindex=tk.END, count=length, regexp=1)
 
         # Number Highlighting
-        self.highlight_string_num_comment(self.language_file['numbers']['match'], "number")
+        self.highlight_string_num_comment(f"\m{self.language_file['numbers']['match']}(?!\w)", "number")
 
         # String Highlighting
-        self.highlight_string_num_comment(self.language_file['strings']['match'], "string")
+        self.highlight_string_num_comment(f"(^|\W){self.language_file['strings']['match']}(?!\w)", "string")
 
         # Comment Highlighting
         self.highlight_string_num_comment(self.language_file['comments']['match'], "comment")
