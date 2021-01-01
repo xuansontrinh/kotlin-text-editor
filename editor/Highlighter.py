@@ -47,12 +47,8 @@ class Highlighter:
                 keyword = f"\m{keyword}(?!\w)"
                 idx = self.text_widget.search(keyword, start,\
                     stopindex=tk.END, count=length, regexp=1)
-                while idx:
-                    
+                while idx:                   
                     end = f"{idx}+{length.get()}c"
-                    # if self.text_widget.get(end, end + '+1c').isalnum():
-                    #     print(self.text_widget.get(end, end + '+1c'), end)
-                    #     end = end + '+1c'
                     self.text_widget.tag_add(category, idx, end)
                     start = end
                     idx = self.text_widget.search(keyword, start, stopindex=tk.END, count=length, regexp=1)
