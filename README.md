@@ -6,7 +6,8 @@ The program was written with `Python 3.8` so it is required to have Python 3.x p
 ## Tested environment
 - OS: `Windows 10`
 - Screen Resolution: `3840 x 2160`
-- Python version: `3.8`
+- Python version: `Python 3.8`
+- JDK version: `Java SE Development Kit 8u271`
 
 ## Installation
 - Install `python 3.x`

@@ -61,10 +61,12 @@ class Highlighter:
             self.highlight_string_num_comment(match, "comment")
 
         # Number Highlighting
-        self.highlight_string_num_comment(f"\m{self.language_file['numbers']['match']}(?!\w)", "number")
+        for match in self.language_file['numbers']['matches']:
+            self.highlight_string_num_comment(f"\m{match}(?!\w)", "number")
 
         # String Highlighting
-        self.highlight_string_num_comment(f"(^|\W){self.language_file['strings']['match']}(?!\w)", "string")
+        for match in self.language_file['strings']['matches']:
+            self.highlight_string_num_comment(f"(^|\W){match}(?!\w)", "string")
 
     
     def on_key_release(self, event=None):

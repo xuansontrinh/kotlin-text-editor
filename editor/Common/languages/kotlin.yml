@@ -43,9 +43,11 @@ categories:
       - delay
       - println
 numbers:
-  match: (\d)+[.]?(\d)*
+  matches: 
+    - (\d)+[.]?(\d)*
 strings:
-  match: '[\"][^\"]*[\"]'
+  matches: 
+    - '[\"][^\"]*[\"]'
 comments:
   matches: 
     - "//.*$"

@@ -12,21 +12,26 @@ from Common.Utils import parse_theme_file, parse_language_file, get_icon, FONT_F
 from CustomTkText import CustomTkText
 from Highlighter import Highlighter
 from GifCanvas import GifCanvas
-from LineNumbers import TextLineNumbers
+from TextLineNumbers import TextLineNumbers
 
 
 class TextEditor:
     def __init__(self, language='kotlin', theme='dracula'):
-
+        # Load/Init variables/constants
         self.language = language
         self.theme = theme
-        self.window = tk.Tk()
-        self.font_size = tk.IntVar()
-        self.window.title('{} Text Editor'.format(self.language[0].upper() + self.language[1:]))
-
         self.theme_file = parse_theme_file(theme=self.theme)
         self.language_file = parse_language_file(language=self.language)
         self.script_file_name = FILE_NAME + '.' + self.language_file['script_extension']
+
+        # Init components for the text editor layout
+
+        self.window = tk.Tk()
+        self.window.title('{} Text Editor'.format(self.language[0].upper() + self.language[1:]))
+        self.font_size = tk.IntVar()
+        self.buildMenuBar()
+
+        # Init editor pane
         self.editor = CustomTkText(
             self.window, 
             background=self.theme_file['background']['color'], 
@@ -41,6 +46,7 @@ class TextEditor:
         self.editor_lab = tk.Label(self.window, textvar=self.current_editor_index)
         self.editor.bind('<<CursorChange>>', self.updateEditorIndex)
         
+        # Init editor scroll bars and connect them with editor pane
         self.editor_vertical_scroll_bar = tk.Scrollbar(
             orient=tk.VERTICAL, 
             command=self.editor.yview,)
@@ -49,6 +55,8 @@ class TextEditor:
             command=self.editor.xview)
         self.editor.configure(yscrollcommand=self.editor_vertical_scroll_bar.set)
         self.editor.configure(xscrollcommand=self.editor_horizontal_scroll_bar.set)
+
+        # Connects line number layout with editor pane
         self.line_numbers = TextLineNumbers(
             self.window
         )
@@ -56,36 +64,39 @@ class TextEditor:
         self.editor.bind("<<ViewScroll>>", self.onEditorViewScroll)
         h = Highlighter(self.editor, language=self.language, theme=self.theme)
 
-        self.buildMenuBar()
-
+        # Init output pane and connect it with callbacks when events are fired
         self.output = tk.Text(
             self.window,
             width=20
         )
-        self.output_vertical_scroll_bar = tk.Scrollbar(orient="vertical", command=self.output.yview)
-        self.output.configure(yscrollcommand=self.output_vertical_scroll_bar.set)
         self.output.tag_configure("error", foreground="red")
         self.output.tag_configure("error_location", foreground="blue", underline=True)
         self.output.tag_bind("error_location", "<Button-1>", self.onErrorLocationClicked)
+
+        # Init output scroll bar and connect it with output pane
+        self.output_vertical_scroll_bar = tk.Scrollbar(orient="vertical", command=self.output.yview)
+        self.output.configure(yscrollcommand=self.output_vertical_scroll_bar.set)
+
+        # Init spinner to show when executing the script
         self.loading_spinner = get_icon('spinner', ext='gif')
         self.loading_canvas = GifCanvas(
             self.window,
             width=self.loading_spinner.width(),
             height=self.loading_spinner.height())
 
-        play_image = get_icon('play')
-
         # Init `Execute` button
+        self.play_image = get_icon('play')
         self.execute_button = tk.Button(
             self.window,
             background=self.theme_file['background']['color'],
             foreground=self.theme_file['foreground']['color'],
             text=' Execute', 
-            image=play_image, 
+            image=self.play_image, 
             compound=tk.LEFT, 
             pady=5,
             padx=10,
             command=self.onExecutePressed)
+        self.execute_button.image = self.play_image
 
         # Init `Clear Output` button
         self.clear_output_button = tk.Button(
@@ -123,7 +134,6 @@ class TextEditor:
         self.execute_button.grid(column=18, columnspan=2, row=2, sticky=tk.NSEW)
         self.loading_canvas.grid(column=20, row=2, sticky=tk.NSEW)
         self.clear_output_button.grid(column=21, columnspan=2, row=2, sticky=tk.NSEW)
-        self.execute_button.image = play_image
 
         # Init values for widgets in the layout
         self.font_size.set(FONT_SIZE_MAP[FONT_SIZE_DEFAULT])
@@ -218,7 +228,6 @@ class TextEditor:
 
     def changeFontSize(self):
         self.editor.config(font=(FONT_FAMILY, self.font_size.get()))
-        # self.line_numbers.config(font=(FONT_FAMILY, self.font_size.get()))
         self.line_numbers.redraw(font=(FONT_FAMILY, self.font_size.get()))
         self.output.config(font=(FONT_FAMILY, self.font_size.get()))
 
