@@ -27,9 +27,6 @@ class Highlighter:
         idx = self.text_widget.search(regex, start, stopindex=tk.END, regexp=1, count=length)
         while idx:
             end = f"{idx}+{length.get()}c"
-            for to_del_tag in self.text_widget.tag_names():
-                if to_del_tag != 'sel':
-                    self.text_widget.tag_remove(to_del_tag, idx, end)
             self.text_widget.tag_add(tag, idx, end)
             start = end
             idx = self.text_widget.search(regex, start, stopindex=tk.END, regexp=1, count=length)
@@ -55,10 +52,6 @@ class Highlighter:
                     self.text_widget.tag_add(category, idx, end)
                     start = end
                     idx = self.text_widget.search(keyword, start, stopindex=tk.END, count=length, regexp=1)
-        
-        # Comment Highlighting
-        for match in self.language_file['comments']['matches']:
-            self.highlight_string_num_comment(match, "comment")
 
         # Number Highlighting
         for match in self.language_file['numbers']['matches']:
@@ -67,6 +60,10 @@ class Highlighter:
         # String Highlighting
         for match in self.language_file['strings']['matches']:
             self.highlight_string_num_comment(f"(^|\W){match}(?!\w)", "string")
+
+        # Comment Highlighting
+        for match in self.language_file['comments']['matches']:
+            self.highlight_string_num_comment(match, "comment")
 
     
     def on_key_release(self, event=None):
