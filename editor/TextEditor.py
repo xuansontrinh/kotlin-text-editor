@@ -264,6 +264,7 @@ class TextEditor:
                 idx = self.output.search(keyword, start, stopindex=tk.END, count=length, regexp=1)
 
         self.output.configure(state=tk.DISABLED)
+        self.output.see(tk.INSERT)
     
     def render(self):
         self.window.mainloop()
