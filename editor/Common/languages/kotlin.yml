@@ -42,15 +42,12 @@ categories:
     matches:
       - delay
       - println
-  numbers:
-    matches:
-      - (\d)+[.]?(\d)*
-  strings:
-    matches:
-      - '[\"][^\"]*[\"]'
-  comments:
-    matches:
-      - "//.*$"
+numbers:
+  match: (\d)+[.]?(\d)*
+strings:
+  match: '[\"][^\"]*[\"]'
+comments:
+  match: "//.*$"
 error_terms:
   match: '[A-Za-z_-]+.kts:(\d)+:(\d)+'
 execution_command:
