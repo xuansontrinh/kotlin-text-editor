@@ -47,7 +47,9 @@ numbers:
 strings:
   match: '[\"][^\"]*[\"]'
 comments:
-  match: "//.*$"
+  matches: 
+    - "//.*$"
+    - /\*(?:.|[\r\n])*?\*/
 error_terms:
   match: '[A-Za-z_-]+.kts:(\d)+:(\d)+'
 execution_command:

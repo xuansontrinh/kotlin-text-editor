@@ -27,15 +27,18 @@ class Highlighter:
         idx = self.text_widget.search(regex, start, stopindex=tk.END, regexp=1, count=length)
         while idx:
             end = f"{idx}+{length.get()}c"
+            for to_del_tag in self.text_widget.tag_names():
+                if to_del_tag != 'sel':
+                    self.text_widget.tag_remove(to_del_tag, idx, end)
             self.text_widget.tag_add(tag, idx, end)
             start = end
             idx = self.text_widget.search(regex, start, stopindex=tk.END, regexp=1, count=length)
 
     def highlight(self, event=None):
         # # Remove outdated tags
-        for tag in self.text_widget.tag_names():
-            if tag != 'sel':
-                self.text_widget.tag_remove(tag, "1.0", tk.END)
+        for to_del_tag in self.text_widget.tag_names():
+            if to_del_tag != 'sel':
+                self.text_widget.tag_remove(to_del_tag, "1.0", tk.END)
 
         length = tk.IntVar()
 
@@ -52,6 +55,10 @@ class Highlighter:
                     self.text_widget.tag_add(category, idx, end)
                     start = end
                     idx = self.text_widget.search(keyword, start, stopindex=tk.END, count=length, regexp=1)
+        
+        # Comment Highlighting
+        for match in self.language_file['comments']['matches']:
+            self.highlight_string_num_comment(match, "comment")
 
         # Number Highlighting
         self.highlight_string_num_comment(f"\m{self.language_file['numbers']['match']}(?!\w)", "number")
@@ -59,8 +66,6 @@ class Highlighter:
         # String Highlighting
         self.highlight_string_num_comment(f"(^|\W){self.language_file['strings']['match']}(?!\w)", "string")
 
-        # Comment Highlighting
-        self.highlight_string_num_comment(self.language_file['comments']['match'], "comment")
     
     def on_key_release(self, event=None):
         self.highlight()

@@ -32,15 +32,23 @@ class TextEditor:
             background=self.theme_file['background']['color'], 
             foreground=self.theme_file['foreground']['color'], 
             insertbackground=self.theme_file['foreground']['color'],
-            width=40
+            width=40,
+            tabs=('1c'),
+            wrap=tk.NONE
         )
         
         self.current_editor_index = tk.StringVar()
         self.editor_lab = tk.Label(self.window, textvar=self.current_editor_index)
         self.editor.bind('<<CursorChange>>', self.updateEditorIndex)
         
-        self.editor_scroll_bar = tk.Scrollbar(orient=tk.VERTICAL, command=self.editor.yview)
-        self.editor.configure(yscrollcommand=self.editor_scroll_bar.set)
+        self.editor_vertical_scroll_bar = tk.Scrollbar(
+            orient=tk.VERTICAL, 
+            command=self.editor.yview,)
+        self.editor_horizontal_scroll_bar = tk.Scrollbar(
+            orient=tk.HORIZONTAL, 
+            command=self.editor.xview)
+        self.editor.configure(yscrollcommand=self.editor_vertical_scroll_bar.set)
+        self.editor.configure(xscrollcommand=self.editor_horizontal_scroll_bar.set)
         self.line_numbers = TextLineNumbers(
             self.window
         )
@@ -54,8 +62,8 @@ class TextEditor:
             self.window,
             width=20
         )
-        self.output_scroll_bar = tk.Scrollbar(orient="vertical", command=self.output.yview)
-        self.output.configure(yscrollcommand=self.output_scroll_bar.set)
+        self.output_vertical_scroll_bar = tk.Scrollbar(orient="vertical", command=self.output.yview)
+        self.output.configure(yscrollcommand=self.output_vertical_scroll_bar.set)
         self.output.tag_configure("error", foreground="red")
         self.output.tag_configure("error_location", foreground="blue", underline=True)
         self.output.tag_bind("error_location", "<Button-1>", self.onErrorLocationClicked)
@@ -66,19 +74,22 @@ class TextEditor:
             height=self.loading_spinner.height())
 
         # Layout Arrangement
-        for i in range(2, 30):
-            self.window.columnconfigure(i, weight=1, uniform='son', minsize=0)
+        for i in range(30):
+            if i not in [0,1,17,29]:
+                self.window.columnconfigure(i, weight=1, uniform='son', minsize=0)
 
         self.window.rowconfigure(0, weight=1)
 
         self.line_numbers.grid(column=0, columnspan=2, row=0, sticky=tk.NSEW)
         self.editor.grid(column=2, columnspan=15, row=0, sticky=tk.NSEW)
-        self.editor_scroll_bar.grid(column=17, row=0, sticky=tk.NS)
+        self.editor_vertical_scroll_bar.grid(column=17, row=0, sticky=tk.NS + tk.W, padx=(0,10))
         self.output.grid(column=18, columnspan=11, row=0, sticky=tk.NSEW)
-        self.output_scroll_bar.grid(column=29, row=0, sticky=tk.NS)
+        self.output_vertical_scroll_bar.grid(column=29, row=0, sticky=tk.NS + tk.W)
+        self.editor_horizontal_scroll_bar.grid(column=2, columnspan=15, row=1, sticky=tk.EW)
+
 
         self.updateOutputPane()
-        self.editor_lab.grid(column=2, columnspan=15, row=1, sticky=tk.NSEW)
+        self.editor_lab.grid(column=2, columnspan=15, row=2, sticky=tk.NSEW)
 
         play_image = get_icon('play')
         self.execute_button = tk.Button(
@@ -99,9 +110,9 @@ class TextEditor:
             pady=5,
             padx=10,
             command=self.clearOutputPane)
-        self.execute_button.grid(column=18, columnspan=2, row=1, sticky=tk.NSEW)
-        self.loading_canvas.grid(column=20, row=1, sticky=tk.NSEW)
-        self.clear_output_button.grid(column=21, columnspan=2, row=1, sticky=tk.NSEW)
+        self.execute_button.grid(column=18, columnspan=2, row=2, sticky=tk.NSEW)
+        self.loading_canvas.grid(column=20, row=2, sticky=tk.NSEW)
+        self.clear_output_button.grid(column=21, columnspan=2, row=2, sticky=tk.NSEW)
         self.execute_button.image = play_image
 
         self.font_size.set(FONT_SIZE_MAP[FONT_SIZE_DEFAULT])
@@ -144,6 +155,8 @@ class TextEditor:
 
 
     def onExecutePressed(self):
+        if not self.output.compare("end-1c", "==", "1.0"):
+            self.updateOutputPane('\n-------\n', stderr=False)
         os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
         file = open(self.script_file_name, 'w')
