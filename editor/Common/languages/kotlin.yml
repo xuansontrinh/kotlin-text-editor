@@ -47,7 +47,7 @@ numbers:
     - (\d)+[.]?(\d)*
 strings:
   matches: 
-    - '[\"][^\"]*[\"]'
+    - '\"(.*)([^\\]\")'
 comments:
   matches: 
     - "//.*$"

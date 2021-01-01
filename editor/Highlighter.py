@@ -26,7 +26,11 @@ class Highlighter:
         start = 1.0
         idx = self.text_widget.search(regex, start, stopindex=tk.END, regexp=1, count=length)
         while idx:
-            end = f"{idx}+{length.get()}c"
+            old_idx = idx
+            # Simulate string tag lookbehind
+            if tag == "string" and self.text_widget.get(idx, idx + '+1c') != '"':
+                idx = idx + '+1c'
+            end = f"{old_idx}+{length.get()}c"
             self.text_widget.tag_add(tag, idx, end)
             start = end
             idx = self.text_widget.search(regex, start, stopindex=tk.END, regexp=1, count=length)
