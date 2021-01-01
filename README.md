@@ -7,9 +7,10 @@ The program was written with `Python 3.8` so it is required to have Python 3.x p
 - OS: `Windows 10`
 - Screen Resolution: `3840 x 2160`
 - Python version: `Python 3.8`
-- JDK version: `Java SE Development Kit 8u271`
+- Java Development Kit (JDK) version: `Java SE Development Kit 8u271`
 
 ## Installation
+- Install JDK, e.g. `Java SE Development Kit 8u271`
 - Install `python 3.x`
 - Install required python packages with command `pip install -r requirements.txt` where `requirements.txt` is located at `editor/`
 - Install kotlin language (to execute kotlin script)
