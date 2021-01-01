@@ -32,6 +32,7 @@ class TextEditor:
             background=self.theme_file['background']['color'], 
             foreground=self.theme_file['foreground']['color'], 
             insertbackground=self.theme_file['foreground']['color'],
+            width=40
         )
         
         self.current_editor_index = tk.StringVar()
@@ -51,7 +52,7 @@ class TextEditor:
 
         self.output = tk.Text(
             self.window,
-            width=10
+            width=20
         )
         self.output_scroll_bar = tk.Scrollbar(orient="vertical", command=self.output.yview)
         self.output.configure(yscrollcommand=self.output_scroll_bar.set)
