@@ -227,7 +227,7 @@ class TextEditor:
                 end = f"{idx}+{length.get()}c"
                 self.output.tag_add("error_location", idx, end)
                 start = end
-                idx = self.output.search(keyword, start, stopindex=tk.END, regexp=1)
+                idx = self.output.search(keyword, start, stopindex=tk.END, count=length, regexp=1)
 
         self.output.configure(state=tk.DISABLED)
     

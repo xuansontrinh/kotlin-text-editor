@@ -7,12 +7,12 @@ categories:
     color: '#50FA7B'
   functions:
     color: '#50FA7B'
-numbers:
-  color: '#8BE9FD'
-strings:
-  color: '#F1FA8C'
-comments:
-  color: '#6272a4'
+  numbers:
+    color: '#8BE9FD'
+  strings:
+    color: '#F1FA8C'
+  comments:
+    color: '#6272a4'
 background:
   color: '#282a36'
 foreground:
